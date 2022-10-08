@@ -1,4 +1,4 @@
-# Unsupervised robustness
+# Robustness of Unsupervised Representation Learning without Labels
 
 This is the official implementation of the experiments in the _Robustness of Unsupervised Representation Learning without Labels_ paper.
 ## Installation
