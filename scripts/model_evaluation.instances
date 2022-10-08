@@ -1,0 +1,134 @@
+moco:
+  model: moco-v2
+  model_weights: data/models/moco_v2_200ep_pretrain.pth.tar
+  results_dir: data/model_evaluation/moco
+  bs_repr_d_dist: 256
+  bs_whitebox: 32
+  bs_linprobe: 128
+  bs_impersonation: 64
+
+simclr-sk0:
+  model: simclr2_r50_1x_sk0
+  model_weights: data/models/simclr2_r50_1x_sk0.pth
+  results_dir: data/model_evaluation/simclr2_r50_1x_sk0
+  bs_repr_d_dist: 256
+  bs_whitebox: 32
+  bs_linprobe: 128
+  bs_impersonation: 64
+
+simsiam:
+  model: simsiam
+  model_weights: data/models/simsiam_100ep_256bs.pth.tar
+  results_dir: data/model_evaluation/simsiam
+  bs_repr_d_dist: 256
+  bs_whitebox: 32
+  bs_linprobe: 128
+  bs_impersonation: 64
+
+pixpro:
+  model: pixpro
+  model_weights: data/models/pixpro_base_r50_400ep_md5_919c6612.pth
+  results_dir: data/model_evaluation/pixpro
+  bs_repr_d_dist: 256
+  bs_whitebox: 32
+  bs_linprobe: 128
+  bs_impersonation: 64
+
+amdim:
+  model: amdim
+  model_weights: data/models/amdim_ndf256_rkhs2048_rd10.pth
+  results_dir: data/model_evaluation/amdim
+  bs_repr_d_dist: 64
+  bs_whitebox: 8
+  bs_linprobe: 64
+  bs_impersonation: 8
+
+mae:
+  model: mae
+  model_weights: data/models/mae_pretrain_vit_large.pth
+  results_dir: data/model_evaluation/mae
+  bs_repr_d_dist: 256
+  bs_whitebox: 8
+  bs_linprobe: 128
+  bs_impersonation: 8
+
+moco_nonsem:
+  model: moco-nonsem
+  model_weights: data/models/mocov2_mocok16384_bs128_lr0.03_nonsem_noaug_16_72_nn1_alpha3_epoch200.pth.tar
+  results_dir: data/model_evaluation/mocok16384_bs128_lr0.03_nonsem_noaug_16_72_nn1_alpha3
+  bs_repr_d_dist: 256
+  bs_whitebox: 32
+  bs_linprobe: 128
+  bs_impersonation: 64
+    
+resnet:
+  model: resnet
+  model_weights: None
+  results_dir: data/model_evaluation/resnet
+  bs_repr_d_dist: 256
+  bs_whitebox: 32
+  bs_linprobe: 128
+  bs_impersonation: 64
+  
+moco-untar:
+  model: moco-v2
+  model_weights: data/models/finetune_untargeted_upgd/checkpoint_0209.pth.tar
+  results_dir: data/model_evaluation/moco_finetune_10iter_combined_pgd-untargeted
+  bs_repr_d_dist: 256
+  bs_whitebox: 32
+  bs_linprobe: 128
+  bs_impersonation: 64
+  
+moco-tar:
+  model: moco-v2
+  model_weights: data/models/finetune_targeted_upgd/checkpoint_0209.pth.tar
+  results_dir: data/model_evaluation/moco_finetune_10iter_combined_pgd-targeted
+  bs_repr_d_dist: 256
+  bs_whitebox: 32
+  bs_linprobe: 128
+  bs_impersonation: 64
+    
+moco-loss:
+  model: moco-v2
+  model_weights: data/models/finetune_loss_upgd/checkpoint_0209.pth.tar
+  results_dir: data/model_evaluation/moco_finetune_10iter_combined_pgd-loss
+  bs_repr_d_dist: 256
+  bs_whitebox: 32
+  bs_linprobe: 128
+  bs_impersonation: 64
+    
+moco3:
+  model: moco-v3
+  model_weights: data/models/vit-s-300ep.pth.tar
+  results_dir: data/model_evaluation/moco3
+  bs_repr_d_dist: 256
+  bs_whitebox: 16
+  bs_linprobe: 128
+  bs_impersonation: 64
+     
+moco3-untar:
+  model: moco-v3
+  model_weights: data/models/moco3_finetune_untargeted_upgd/checkpoint_0309.pth.tar
+  results_dir: data/model_evaluation/moco3_finetune_10iter_combined_pgd-untargeted
+  bs_repr_d_dist: 256
+  bs_whitebox: 16
+  bs_linprobe: 128
+  bs_impersonation: 64
+        
+moco3-tar:
+  model: moco-v3
+  model_weights: data/models/moco3_finetune_targeted_upgd/checkpoint_0309.pth.tar
+  results_dir: data/model_evaluation/moco3_finetune_10iter_combined_pgd-targeted
+  bs_repr_d_dist: 256
+  bs_whitebox: 16
+  bs_linprobe: 128
+  bs_impersonation: 64     
+
+moco3-loss:
+  model: moco-v3
+  model_weights: data/models/moco3_finetune_loss_upgd/checkpoint_0309.pth.tar
+  results_dir: data/model_evaluation/moco3_finetune_10iter_combined_pgd-loss
+  bs_repr_d_dist: 256
+  bs_whitebox: 16
+  bs_linprobe: 128
+  bs_impersonation: 64

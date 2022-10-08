@@ -1,0 +1,129 @@
+parameters:
+  - model
+  - model_weights
+  - results_dir
+  - bs_repr_d_dist
+  - bs_whitebox
+  - bs_linprobe
+  - bs_impersonation
+
+stages:
+
+  repr_d_dist:
+    gpus: 1
+    cpus: 2
+    track_changes:
+      - scripts/representation_distance_distribution.py
+      - <model_weights>
+    clear:
+      - <results_dir>/quantiles.yaml
+    command: scripts/representation_distance_distribution.py --dataset data/PASS_dataset --batch-size <bs_repr_d_dist> -N 100000 --model <model> --model-weights <model_weights> --output <results_dir>/quantiles.yaml
+
+  untar_0.05:
+    gpus: 1
+    cpus: 1
+    track_changes:
+      - scripts/whitebox_attack.py
+      - utils/pgd_attack.py
+      - <model_weights>
+    clear:
+      - <results_dir>/eval_untargeted_pgd_0.05
+    command: scripts/whitebox_attack.py -b <bs_whitebox> --n-samples 1000 --untargeted -a pgd --ball-size 0.05 --alpha 0.001 -M 55 -D data/PASS_dataset --history --model <model> --model-weights <model_weights> --output <results_dir>/eval_untargeted_pgd_0.05
+    
+    
+  untar_0.10:
+    gpus: 1
+    cpus: 1
+    track_changes:
+      - scripts/whitebox_attack.py
+      - utils/pgd_attack.py
+      - <model_weights>
+    clear:
+      - <results_dir>/eval_untargeted_pgd_0.10
+    command: scripts/whitebox_attack.py -b <bs_whitebox> --n-samples 1000 --untargeted -a pgd --ball-size 0.10 --alpha 0.001 -M 55 -D data/PASS_dataset --history --model <model> --model-weights <model_weights> --output <results_dir>/eval_untargeted_pgd_0.10
+    
+  tar_0.05:
+    gpus: 1
+    cpus: 1
+    track_changes:
+      - scripts/whitebox_attack.py
+      - utils/pgd_attack.py
+      - <model_weights>
+    clear:
+      - <results_dir>/eval_targeted_pgd_0.05
+    command: scripts/whitebox_attack.py -b <bs_whitebox> --n-samples 1000 --targeted -a pgd --ball-size 0.05 --alpha 0.001 -M 55 -D data/PASS_dataset --history --model <model> --model-weights <model_weights> --output <results_dir>/eval_targeted_pgd_0.05
+    
+  tar_0.10:
+    gpus: 1
+    cpus: 1
+    track_changes:
+      - scripts/whitebox_attack.py
+      - utils/pgd_attack.py
+      - <model_weights>
+    clear:
+      - <results_dir>/eval_targeted_pgd_0.10
+    command: scripts/whitebox_attack.py -b <bs_whitebox> --n-samples 1000 --targeted -a pgd --ball-size 0.10 --alpha 0.001 -M 55 -D data/PASS_dataset --history --model <model> --model-weights <model_weights> --output <results_dir>/eval_targeted_pgd_0.10
+    
+  eval_linpro:
+    gpus: 1
+    cpus: 4
+    track_changes:
+      - scripts/linear_probe.py
+      - <model_weights>
+      - <results_dir>/lin_probe_weights/model_best.pth.tar
+    command: scripts/linear_probe.py --evaluate <results_dir>/linear_probe_results.yaml --batch-size <bs_linprobe> --model <model> --model-weights <model_weights> --multiprocessing-distributed --world-size 1 --rank 0 -D data/imagenet --resume <results_dir>/lin_probe_weights/model_best.pth.tar
+
+  eval_linpro_lowpass:
+    gpus: 1
+    cpus: 4
+    track_changes:
+      - scripts/linear_probe.py
+      - <model_weights>
+      - <results_dir>/lin_probe_lowpass_weights/model_best.pth.tar
+    command: scripts/linear_probe.py --low_pass_radius 50 --evaluate <results_dir>/linear_probe_lowpass_results.yaml --batch-size <bs_linprobe> --model <model> --model-weights <model_weights> --multiprocessing-distributed --world-size 1 --rank 0 -D data/imagenet --resume <results_dir>/lin_probe_lowpass_weights/model_best.pth.tar
+
+  margin:
+    gpus: 1
+    cpus: 1
+    track_changes:
+     - scripts/margin.py
+     - utils/pgd_attack.py
+     - <model_weights>
+    clear:
+     - <results_dir>/margin.yaml
+    command: scripts/margin.py --n-samples 1000 --model <model> --model-weights <model_weights> --output <results_dir>/margin.csv --dataset data/PASS_dataset --iterations 10 --batch-size <bs_whitebox>
+
+  breakaway:
+    gpus: 1
+    cpus: 1
+    track_changes:
+     - scripts/breakaway.py
+     - utils/pgd_attack.py
+     - <model_weights>
+    clear:
+     - <results_dir>/eval_selfsim_1.4m
+    command: scripts/breakaway.py --dataset data/PASS_dataset --batch-size <bs_whitebox> --n-samples 1000 --ball-size 0.05 --alpha 0.001 -M 25 --output <results_dir>/eval_selfsim_1.4m --cache <results_dir>/representations_cache.pth --model <model> --model-weights <model_weights>
+
+  cert_acc:
+    gpus: 1
+    cpus: 1
+    track_changes:
+      - scripts/certified_accuracy.py
+      - <results_dir>/lin_probe_noisy_weights/model_best.pth.tar
+    command: scripts/certified_accuracy.py --model <model> --model-weights <model_weights> --dataset data/imagenet/val --batch-size <bs_repr_d_dist> --checkpoint <results_dir>/lin_probe_noisy_weights/model_best.pth.tar --sigma 0.25 --n-samples 200 --N0 100 --N 100000 --alpha 0.001 --output <results_dir>/noisy_certified_accuracy.csv
+    
+  cert_robust:
+    gpus: 1
+    cpus: 1
+    track_changes:
+      - scripts/certified_robustness.py
+    command: scripts/certified_robustness.py --model <model> --model-weights <model_weights> --dataset data/imagenet/val --batch-size <bs_repr_d_dist> --sigma 0.25 --n-samples 200 --N0 10000 --N 100000 --output <results_dir>/certified_robustness.csv
+    
+  impersonation:
+    gpus: 1
+    cpus: 1
+    track_changes:
+      - scripts/impersonation.py
+      - utils/pgd_attack.py
+      - <results_dir>/lin_probe_weights/model_best.pth.tar
+    command: scripts/impersonation.py -b <bs_impersonation> --ball-size 0.10 --alpha 0.01 -M 50 -D data/PetImages --model <model> --model-weights <model_weights> --checkpoint <results_dir>/lin_probe_weights/model_best.pth.tar  --output <results_dir>/impersonation

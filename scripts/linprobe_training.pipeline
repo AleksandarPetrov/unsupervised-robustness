@@ -1,0 +1,31 @@
+parameters:
+  - model
+  - model_weights
+  - results_dir
+  - bs_linprobe
+
+stages:
+
+  train_linpro:
+    gpus: 2
+    cpus: 4
+    track_changes:
+      - scripts/linear_probe.py
+      - <model_weights>
+    command: scripts/linear_probe.py --lr 30.0 --batch-size <bs_linprobe> --model <model> --model-weights <model_weights>  --multiprocessing-distributed --world-size 1 --rank 0 -D data/imagenet --checkpoint-dir <results_dir>/lin_probe_weights --epochs 25
+
+  train_linpro_lowpass:
+    gpus: 2
+    cpus: 4
+    track_changes:
+      - scripts/linear_probe.py
+      - <model_weights>
+    command: scripts/linear_probe.py --low_pass_radius 50 --lr 30.0 --batch-size <bs_linprobe> --model <model> --model-weights <model_weights>  --multiprocessing-distributed --world-size 1 --rank 0 -D data/imagenet --checkpoint-dir <results_dir>/lin_probe_lowpass_weights --epochs 25
+
+  train_linpro_noisy:
+    gpus: 2
+    cpus: 4
+    track_changes:
+      - scripts/linear_probe.py
+      - <model_weights>
+    command: scripts/linear_probe.py --noise-sigma 0.25 --lr 30.0 --batch-size <bs_linprobe> --model <model> --model-weights <model_weights> --multiprocessing-distributed --world-size 1 --rank 0 -D data/imagenet --checkpoint-dir <results_dir>/lin_probe_noisy_weights --epochs 25

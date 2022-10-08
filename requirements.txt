@@ -1,0 +1,30 @@
+# verified
+colorama==0.4.5
+matplotlib==3.5.2
+numpy==1.23.1
+pandas==1.4.3
+Pillow==9.2.0
+PyYAML==6.0
+scipy==1.8.1
+seaborn==0.11.2
+termcolor==1.1.0
+timm==0.4.9
+torch==1.12.0
+torchsummary==1.5.1
+torchvision==0.13.0
+tqdm==4.64.0
+rich==12.5.1
+scikit-learn==1.1.1
+statsmodels==0.13.2
+tensorboard==2.9.1
+
+# unverified
+# jupyterlab
+# numpy
+# numba
+# dill
+# h5py
+# ipympl
+# ipywidgets
+# statsmodels
+

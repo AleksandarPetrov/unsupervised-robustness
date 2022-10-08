@@ -1,0 +1,3 @@
+[submodule "smoothing"]
+	path = smoothing
+	url = git@github.com:locuslab/smoothing.git
