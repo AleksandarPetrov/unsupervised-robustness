@@ -1,6 +1,6 @@
 # Robustness of Unsupervised Representation Learning without Labels
 
-This is the official implementation of the experiments in the _Robustness of Unsupervised Representation Learning without Labels_ paper.
+This is the official implementation of the experiments in our [Robustness of Unsupervised Representation Learning without Labels](https://arxiv.org/abs/2210.04076) paper.
 ## Installation
 
 This section outlines the models and datasets that need to be downloaded as well as the Python packages needed to reproduce the results.
@@ -326,7 +326,7 @@ If you find this work useful for your research, please cite it as:
     petrov2022robustness,
     title={Robustness of Unsupervised Representation Learning without Labels},
     author={Aleksandar Petrov and Marta Kwiatkowska},
+    journal = {arXiv preprint arXiv:2202.01181},
     year={2022},
-    url={arXiv:}
 }
 ```
